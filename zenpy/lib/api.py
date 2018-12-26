@@ -549,13 +549,13 @@ class IncrementalApi(Api):
     IncrementalApi supports the incremental endpoint.
     """
 
-    def incremental(self, start_time, include=None):
+    def incremental(self, start_time, end_time=None,include=None):
         """
         Retrieve bulk data from the incremental API.
         :param include: list of objects to sideload
         :param start_time: The time of the oldest object you are interested in.
         """
-        return self._query_zendesk(self.endpoint.incremental, self.object_type, start_time=start_time, include=include)
+        return self._query_zendesk(self.endpoint.incremental, self.object_type, start_time=start_time, end_time=end_time, include=include)
 
 
 class UserIdentityApi(Api):
