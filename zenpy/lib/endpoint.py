@@ -143,7 +143,6 @@ class MultipleIDEndpoint(BaseEndpoint):
             raise ZenpyException("This endpoint requires at least two arguments!")
         return Url(self.endpoint.format(*args))
 
-
 class IncrementalEndpoint(BaseEndpoint):
     """
     An IncrementalEndpoint takes a start_time parameter
@@ -154,19 +153,23 @@ class IncrementalEndpoint(BaseEndpoint):
     Zenpy can do. It is recommended to always pass timezone aware objects to this endpoint.
 
     :param start_time: unix timestamp or datetime object
+    :param end_time: unix timestamp or datetime object
     :param include: list of items to sideload
     """
 
-    def __call__(self, start_time=None, include=None):
+    def __call__(self, start_time=None, end_time=None, include=None):
         if start_time is None:
             raise ZenpyException("Incremental Endpoint requires a start_time parameter!")
-
         elif isinstance(start_time, datetime):
             unix_time = to_unix_ts(start_time)
         else:
             unix_time = start_time
 
         params = dict(start_time=str(unix_time))
+        if end_time is not None:
+            unix_time_end_time = to_unix_ts(end_time) if isinstance(end_time, datetime) else end_time
+            params.update(dict(end_time=str(unix_time_end_time)))
+
         if include is not None:
             if is_iterable_but_not_string(include):
                 params.update(dict(include=",".join(include)))
